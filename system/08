@@ -1,0 +1,11 @@
+~/.ssh/authorized_keys
+
+To generate keys use command:
+
+ssh-keygen -t rsa
+
+It creates a folder ~/.ssh and two files in the folder - id_rsa and id_rsa.pub
+
+Then you touch ~/.ssh/authorized_keys
+
+And run command cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
