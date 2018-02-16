@@ -1,0 +1,20 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    08                                                 :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: dpolosuk <marvin@42.fr>                    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2018/02/15 14:48:59 by dpolosuk          #+#    #+#              #
+#    Updated: 2018/02/15 16:24:38 by dpolosuk         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+dig slash16.org
+
+In additional section in right most column there are ip addresses, copy one of
+those (e.g 205.251.192.144)
+
+whois 205.251.192.144
+
+Provider is Amazon.com
