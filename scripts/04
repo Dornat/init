@@ -1,0 +1,46 @@
+#!/bin/bash
+
+#Check if postfix installed, if not - install and configure
+
+postfix_chk=$(sudo which postfix)
+
+if [[ -z $postfix_chk ]]
+then
+	sudo apt-get install -y postfix
+	sudo mkfifo /var/spool/postfix/public/pickup
+	sudo service postfix restart
+fi
+
+#Check if there is scheduled task for the script in crontab, if not - create
+
+cron_chk=$(crontab -l | grep -F '0 0 * * * bash ~/init/scripts/04')
+
+if [[ -z $cron_chk ]]
+then
+	(crontab -l 2>/dev/null; echo "0 0 * * * bash ~/init/scripts/04") | crontab -
+fi
+
+#Create a file for checking hashsums with md5sum
+
+sudo touch /etc/crontab_hash
+sudo chmod 666 /etc/crontab_hash
+
+hash_chk=$(sudo md5sum -c /etc/crontab_hash | sed 's/.*[ ]//g')
+
+if [[ -z $hash_chk ]] #if there is no hash in hash file - create one and exit
+then
+	sudo md5sum /etc/crontab > /etc/crontab_hash
+	exit 0
+fi
+
+#If the file has been updated script sends mail to root, mail can be checked in /var/mail/root
+
+if [[ $hash_chk == "FAILED" ]]
+then
+	touch /tmp/mail_to_root.txt
+	echo "Subject: /etc/crontab file has been updated" > /tmp/mail_to_root.txt
+	echo "Check the damn crontab file in /etc/crontab, it has been updated!" >> /tmp/mail_to_root.txt
+	sudo sendmail root < /tmp/mail_to_root.txt
+	sudo rm -rf /tmp/mail_to_root.txt
+	sudo md5sum /etc/crontab > /etc/crontab_hash
+fi
